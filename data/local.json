@@ -1,0 +1,56 @@
+{
+  "_comment": "Local measurements of the MiniVectorDB submission. This file is maintained by hand, the refresh script only reads it and never overwrites the values, so an automated run cannot drop them.",
+  "readiness": {
+    "local_cases_total": 9,
+    "local_cases_passed": 9,
+    "public_cases_total": 5,
+    "public_cases_passed": 0,
+    "public_cases_status": "not-yet-run",
+    "docker_image_built": false
+  },
+  "public_case_status": {
+    "sql_crud": "not-run",
+    "sql_comparisons": "not-run",
+    "sql_ordering": "not-run",
+    "sql_empty": "not-run",
+    "vector_euclidean": "not-run"
+  },
+  "deliverables": {
+    "source": {
+      "present": true,
+      "path": "minivectordb/",
+      "files": 47
+    },
+    "dockerfile": {
+      "present": true,
+      "path": "Dockerfile",
+      "lines": 44
+    },
+    "conversation": {
+      "present": true,
+      "path": "agent/conversation.json",
+      "bytes": 42837,
+      "limit_bytes": 131072,
+      "valid": true
+    }
+  },
+  "local_benchmark": {
+    "rows": 10000,
+    "dim": 128,
+    "queries": 1000,
+    "k": 10,
+    "write_seconds": 1.25,
+    "query_seconds": 2.344,
+    "query_per_second": 426.6
+  },
+  "resource_test": {
+    "rows": 300000,
+    "dim": 128,
+    "cache_mb": 16,
+    "data_bytes": 433551631,
+    "write_seconds": 62.47,
+    "restart_seconds": 0.83,
+    "query_seconds": 0.59,
+    "oom": false
+  }
+}

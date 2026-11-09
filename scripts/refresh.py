@@ -23,6 +23,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = REPO_ROOT / "data" / "latest.json"
+LOCAL_FILE = REPO_ROOT / "data" / "local.json"
 
 UPSTREAM_REPO = "oceanbase/seekdb"
 UPSTREAM_BRANCH = "2026-competition-round2"
@@ -48,6 +49,16 @@ def gh(path: str) -> object:
     """Calls the GitHub API through the gh command line."""
     raw = run(["gh", "api", path])
     return json.loads(raw)
+
+
+def load_local() -> dict:
+    """Reads the local measurements. The file is maintained by hand."""
+    if not LOCAL_FILE.is_file():
+        return {}
+    try:
+        return json.loads(LOCAL_FILE.read_text(encoding="utf-8"))
+    except ValueError:
+        return {}
 
 
 def upstream_commits(limit: int = 12) -> list[dict]:
@@ -213,32 +224,20 @@ def build(previous: dict) -> dict:
         "package": package,
     }
     submission = submission_state()
-    # The measured values of the local run are kept, they only change when
-    # the benchmark is executed again. The values that the API reports about
-    # the pushed branch win, because they describe the state that the
-    # evaluation sees.
-    previous_submission = previous.get("submission", {})
-    for key in ("readiness", "local_benchmark", "resource_test"):
-        merged = dict(previous_submission.get(key, {}))
-        merged.update(submission.get(key, {}))
-        submission[key] = merged
-    # The measured counters must not be reset to zero when the branch is not
-    # pushed yet. A zero would be read as "no test was executed" instead of
-    # "the result is not published".
-    for key, field in (
-        ("readiness", "local_cases_total"),
-        ("readiness", "local_cases_passed"),
-        ("readiness", "public_cases_total"),
-        ("readiness", "public_cases_passed"),
-    ):
-        if not submission[key].get(field) and previous_submission.get(key, {}).get(field):
-            submission[key][field] = previous_submission[key][field]
-    # The deliverables of the previous run describe the local commit, they
-    # stay visible until the branch is pushed.
-    if not submission["pushed"]:
-        for key, value in previous_submission.get("deliverables", {}).items():
-            if not submission["deliverables"].get(key, {}).get("present"):
-                submission["deliverables"][key] = value
+    # The local measurements live in their own file, the script only reads
+    # them. A generated run can therefore never drop a measurement.
+    local = load_local()
+    # The values that the API reports about the pushed branch win, because
+    # they describe the state that the evaluation sees. The local
+    # measurements fill the fields that the API cannot know.
+    submission["readiness"].update(local.get("readiness", {}))
+    submission["local_benchmark"] = local.get("local_benchmark", submission["local_benchmark"])
+    submission["resource_test"] = local.get("resource_test", submission["resource_test"])
+    # The deliverables of the local commit stay visible until the branch is
+    # pushed, the API cannot see an unpushed commit.
+    for key, value in local.get("deliverables", {}).items():
+        if not submission["deliverables"].get(key, {}).get("present"):
+            submission["deliverables"][key] = value
     payload = {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "generator": "scripts/refresh.py",
