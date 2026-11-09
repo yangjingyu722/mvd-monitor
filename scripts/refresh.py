@@ -178,6 +178,8 @@ def submission_state() -> dict:
             )
             state["deliverables"]["conversation"]["present"] = True
             state["deliverables"]["conversation"]["bytes"] = entry.get("size", 0)
+            # The material must be a JSON file below the size limit. The
+            # limit of the task is 128 KiB.
             state["deliverables"]["conversation"]["valid"] = (
                 0 < entry.get("size", 0) <= 131072
             )
@@ -212,12 +214,31 @@ def build(previous: dict) -> dict:
     }
     submission = submission_state()
     # The measured values of the local run are kept, they only change when
-    # the benchmark is executed again.
+    # the benchmark is executed again. The values that the API reports about
+    # the pushed branch win, because they describe the state that the
+    # evaluation sees.
+    previous_submission = previous.get("submission", {})
     for key in ("readiness", "local_benchmark", "resource_test"):
-        if key in previous.get("submission", {}):
-            merged = dict(previous["submission"][key])
-            merged.update(submission.get(key, {}))
-            submission[key] = merged
+        merged = dict(previous_submission.get(key, {}))
+        merged.update(submission.get(key, {}))
+        submission[key] = merged
+    # The measured counters must not be reset to zero when the branch is not
+    # pushed yet. A zero would be read as "no test was executed" instead of
+    # "the result is not published".
+    for key, field in (
+        ("readiness", "local_cases_total"),
+        ("readiness", "local_cases_passed"),
+        ("readiness", "public_cases_total"),
+        ("readiness", "public_cases_passed"),
+    ):
+        if not submission[key].get(field) and previous_submission.get(key, {}).get(field):
+            submission[key][field] = previous_submission[key][field]
+    # The deliverables of the previous run describe the local commit, they
+    # stay visible until the branch is pushed.
+    if not submission["pushed"]:
+        for key, value in previous_submission.get("deliverables", {}).items():
+            if not submission["deliverables"].get(key, {}).get("present"):
+                submission["deliverables"][key] = value
     payload = {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "generator": "scripts/refresh.py",
