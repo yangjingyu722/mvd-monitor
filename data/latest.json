@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T09:48:59Z",
+  "generated_at": "2026-11-09T09:57:38Z",
   "generator": "scripts/refresh.py",
   "upstream": {
     "repo": "oceanbase/seekdb",
@@ -37,7 +37,6 @@
         "subject": "upload 2026-competition testcases",
         "files_changed": 0,
         "tags": [
-          "new",
           "task-package"
         ]
       },
@@ -48,9 +47,7 @@
         "author": "LIN",
         "subject": "fix(build): use lld when building jemalloc on Linux (#1496)",
         "files_changed": 0,
-        "tags": [
-          "new"
-        ]
+        "tags": []
       },
       {
         "sha": "2377ef773b7c83aa4f63383bf2d9998683ba51f0",
@@ -59,9 +56,7 @@
         "author": "cms-cms",
         "subject": "fix(vector): accept partial IVF centroid caches (#1467)",
         "files_changed": 0,
-        "tags": [
-          "new"
-        ]
+        "tags": []
       },
       {
         "sha": "47fa38c788516f1ebf3c42cc3e1cfbd9f6bdcc8f",
@@ -70,9 +65,7 @@
         "author": "Whalen",
         "subject": "fix(vector): preserve query-local bitmaps for older read views (#1443)",
         "files_changed": 0,
-        "tags": [
-          "new"
-        ]
+        "tags": []
       },
       {
         "sha": "62a7c761384d72fcd77493bf1c95ba8137e5f9b8",
@@ -81,9 +74,7 @@
         "author": "wangyunlai-seekdb",
         "subject": "fix(storage): stop retrying empty major-freeze records (#1498)",
         "files_changed": 0,
-        "tags": [
-          "new"
-        ]
+        "tags": []
       },
       {
         "sha": "f8db032ef36fdc570cd17c7e0ac7d3d296a5d507",
@@ -92,9 +83,7 @@
         "author": "wangyunlai",
         "subject": "test(charset): cover unicode_ci session and DDL integration (#1493)",
         "files_changed": 0,
-        "tags": [
-          "new"
-        ]
+        "tags": []
       },
       {
         "sha": "6757d0aec3a996f4f52650b358228d9618f0acc3",
@@ -103,9 +92,7 @@
         "author": "footka",
         "subject": "feat(storage): replace SQLite with Rust local transactional KV (#1486)",
         "files_changed": 0,
-        "tags": [
-          "new"
-        ]
+        "tags": []
       },
       {
         "sha": "82e032c19561fc480ed6ac2236d6d8cd533852f2",
@@ -114,9 +101,7 @@
         "author": "LIN",
         "subject": "fix(telemetry): remove creation time from UUID generation (#1487)",
         "files_changed": 0,
-        "tags": [
-          "new"
-        ]
+        "tags": []
       },
       {
         "sha": "a36940ac534088522ccb0cf1e165328ea192343e",
@@ -125,9 +110,7 @@
         "author": "wangyunlai-seekdb",
         "subject": "SEEK-501: restore utf8mb4_unicode_ci collation support (#1349)",
         "files_changed": 0,
-        "tags": [
-          "new"
-        ]
+        "tags": []
       },
       {
         "sha": "208c157423d39326826be1a8d4e5ade2a4ee8ae3",
@@ -136,9 +119,7 @@
         "author": "cms-cms",
         "subject": "fix(ddl): allow dropping readable indexes (#1482)",
         "files_changed": 0,
-        "tags": [
-          "new"
-        ]
+        "tags": []
       }
     ],
     "package": {
@@ -200,27 +181,27 @@
     "pushed_at": null,
     "deliverables": {
       "source": {
-        "present": false,
+        "present": true,
         "path": "minivectordb/",
-        "files": 0
+        "files": 47
       },
       "dockerfile": {
-        "present": false,
+        "present": true,
         "path": "Dockerfile",
-        "lines": 0
+        "lines": 44
       },
       "conversation": {
-        "present": false,
+        "present": true,
         "path": "agent/conversation.json",
-        "bytes": 0,
+        "bytes": 42837,
         "limit_bytes": 131072,
-        "valid": false
+        "valid": true
       }
     },
     "readiness": {
-      "local_cases_total": 0,
-      "local_cases_passed": 0,
-      "public_cases_total": 0,
+      "local_cases_total": 9,
+      "local_cases_passed": 9,
+      "public_cases_total": 5,
       "public_cases_passed": 0,
       "public_cases_status": "not-yet-run",
       "docker_image_built": false
