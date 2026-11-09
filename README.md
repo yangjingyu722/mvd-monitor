@@ -11,7 +11,18 @@
 
 ## 数据
 
-`data/latest.json` 由 `scripts/refresh.py` 生成，内容包括：
+数据分成两个文件：
+
+| 文件 | 维护方式 | 内容 |
+| --- | --- | --- |
+| `data/local.json` | **手工维护** | 本地测量结果：本地用例通过数、公开用例通过状态、三项交付物状态、基准与资源测试数字 |
+| `data/latest.json` | 脚本生成 | 上游 HEAD 与提交列表、公开题包内容、提交仓库 HEAD 与交付物、告警 |
+
+`scripts/refresh.py` **只读** `local.json`，不会覆盖它。这样一次自动刷新不可能把本地
+测量结果冲掉——这个缺陷在开发过程中真实出现过：脚本把"分支未推送时读不到交付物"
+当成了"交付物不存在"，导致监控页上的本地用例数从 9/9 变成 0/0。
+
+`data/latest.json` 内容：
 
 | 字段 | 含义 |
 | --- | --- |
@@ -46,7 +57,18 @@ python scripts/refresh.py             # 写入并推送
 
 ```
 index.html              监控页面
-data/latest.json        数据文件（由脚本生成）
+data/latest.json        生成的数据文件
+data/local.json         本地测量（手工维护，脚本只读）
 scripts/refresh.py      数据生成脚本
 .github/workflows/      自动刷新工作流
 ```
+
+## 更新本地测量
+
+跑完本地用例或基准后，只改 `data/local.json`，然后：
+
+```bash
+python scripts/refresh.py
+```
+
+该脚本会把本地测量合并进 `data/latest.json` 并推送。
