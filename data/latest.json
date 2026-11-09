@@ -1,0 +1,117 @@
+{
+  "generated_at": "2026-11-09T08:20:00Z",
+  "generator": "manual baseline",
+  "upstream": {
+    "repo": "oceanbase/seekdb",
+    "branch": "2026-competition-round2",
+    "head_sha": "a3dba559c1e7ebdc48bc990ffb1a4c75d1c1075c",
+    "head_short": "a3dba559c",
+    "head_date": "2026-11-09T07:00:49Z",
+    "head_subject": "upload some cases",
+    "commits": [
+      {
+        "sha": "a3dba559c1e7ebdc48bc990ffb1a4c75d1c1075c",
+        "short": "a3dba559c",
+        "date": "2026-11-09T07:00:49Z",
+        "author": "wangzelin.wzl",
+        "subject": "upload some cases",
+        "files_changed": 12,
+        "tags": ["task-package", "public-cases"]
+      },
+      {
+        "sha": "c842a368c3394748d0499386c18f6b465242e141",
+        "short": "c842a368c",
+        "date": "2026-11-04T09:25:38Z",
+        "author": "wangzelin.wzl",
+        "subject": "2026 competition one more round",
+        "files_changed": 9148,
+        "tags": ["skeleton"]
+      }
+    ],
+    "package": {
+      "present": true,
+      "version": "minivectordb-public-basic-v1",
+      "scope": "public-samples",
+      "case_count": 5,
+      "total_statements": 32,
+      "cases": [
+        {"id": "sql_crud", "group": "sql", "statements": 9, "checks": ["ddl", "multi-row insert", "select *", "update by condition", "delete by condition", "no-match update/delete"]},
+        {"id": "sql_comparisons", "group": "sql", "statements": 7, "checks": ["numeric comparison", "string comparison", "AND"]},
+        {"id": "sql_ordering", "group": "sql", "statements": 7, "checks": ["asc/desc", "tie by primary key", "LIMIT 0", "LIMIT over count", "unordered result"]},
+        {"id": "sql_empty", "group": "sql", "statements": 4, "checks": ["empty table scan", "empty result set", "delete on empty table"]},
+        {"id": "vector_euclidean", "group": "vector", "statements": 5, "checks": ["2-dim vector", "vector update", "L2_DISTANCE", "distance ordering", "filtered vector query"]}
+      ],
+      "assertion_format": "json-array",
+      "assertion_fields": ["affected_rows", "columns", "rows", "unordered"],
+      "float_tolerance": "abs=1e-5, rel=1e-5",
+      "driver_published": false,
+      "notes": "The public package defines the SQL inputs and the result semantics. The process communication wrapper is defined by the accompanying test driver, which is not part of the public package."
+    }
+  },
+  "submission": {
+    "repo": "yangjingyu722/Myseekdb",
+    "branch": "2026-competition-round2",
+    "head_sha": "9f60529f4366383489f11b03e8740bdbd5e0cf32",
+    "head_short": "9f60529f4",
+    "pushed": false,
+    "pushed_at": null,
+    "deliverables": {
+      "source": {"present": true, "path": "minivectordb/", "files": 47},
+      "dockerfile": {"present": true, "path": "Dockerfile", "lines": 44},
+      "conversation": {"present": true, "path": "agent/conversation.json", "bytes": 42837, "limit_bytes": 131072, "valid": true}
+    },
+    "readiness": {
+      "local_cases_total": 9,
+      "local_cases_passed": 9,
+      "public_cases_total": 5,
+      "public_cases_passed": 0,
+      "public_cases_status": "not-yet-run",
+      "docker_image_built": false
+    },
+    "local_benchmark": {
+      "rows": 10000,
+      "dim": 128,
+      "queries": 1000,
+      "k": 10,
+      "write_seconds": 1.25,
+      "query_seconds": 2.344,
+      "query_per_second": 426.6
+    },
+    "resource_test": {
+      "rows": 300000,
+      "dim": 128,
+      "cache_mb": 16,
+      "data_bytes": 433551631,
+      "write_seconds": 62.47,
+      "restart_seconds": 0.83,
+      "query_seconds": 0.59,
+      "oom": false
+    }
+  },
+  "timeline": {
+    "competition_start": "2026-11-09T04:00:00Z",
+    "competition_end": "2026-11-18T04:00:00Z",
+    "submission_deadline": "2026-11-18T04:00:00Z",
+    "daily_submission_limit": 2
+  },
+  "alerts": [
+    {
+      "level": "critical",
+      "title": "Public cases have not been executed yet",
+      "detail": "The task package a3dba559c changed the assertion format to structured JSON. The local runner still speaks the earlier text protocol, so the five public cases have not been validated against the delivered package.",
+      "action": "Align the protocol layer with the delivered package and run the public cases before any submission."
+    },
+    {
+      "level": "warning",
+      "title": "Evaluation driver is not published",
+      "detail": "The public package states that the process communication wrapper is defined by the accompanying test driver, which is not included. The wire format is still an inference.",
+      "action": "Keep the protocol layer switchable and confirm the format before submitting."
+    },
+    {
+      "level": "info",
+      "title": "Task package updated",
+      "detail": "Commit a3dba559c added mysqltest/ with five public cases and manifest version minivectordb-public-basic-v1.",
+      "action": "Diff the new cases against the local suite and cover the new semantics."
+    }
+  ]
+}

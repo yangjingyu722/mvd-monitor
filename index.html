@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MiniVectorDB 提测监控</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --panel-2: #1c2129;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --ok: #3fb950;
+    --warn: #d29922;
+    --crit: #f85149;
+    --info: #58a6ff;
+    --accent: #a371f7;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 72px; }
+
+  header { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+  h1 { font-size: 21px; margin: 0; letter-spacing: .2px; }
+  .sub { color: var(--muted); font-size: 13px; }
+  .spacer { flex: 1; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px; border-radius: 999px; font-size: 12px;
+    border: 1px solid var(--border); background: var(--panel-2); color: var(--muted);
+    white-space: nowrap;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+  .pill.live .dot { background: var(--ok); box-shadow: 0 0 0 3px rgba(63,185,80,.18); animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
+
+  .bar { height: 6px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; margin: 16px 0 26px; }
+  .bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--info), var(--accent)); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 15px 16px;
+  }
+  .card h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin: 0 0 12px; font-weight: 600; }
+  .kv { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 1px dashed rgba(48,54,61,.55); }
+  .kv:last-child { border-bottom: 0; }
+  .kv b { font-weight: 500; color: var(--muted); font-size: 13px; }
+  .kv span { font-family: var(--mono); font-size: 12.5px; text-align: right; word-break: break-all; }
+  .ok { color: var(--ok); } .warn { color: var(--warn); } .crit { color: var(--crit); }
+  .info { color: var(--info); } .muted { color: var(--muted); } .acc { color: var(--accent); }
+
+  .mono { font-family: var(--mono); font-size: 12px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .6px; }
+  tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: rgba(255,255,255,.022); }
+
+  .tag { display: inline-block; padding: 1px 7px; border-radius: 5px; font-size: 11px;
+         border: 1px solid var(--border); background: var(--panel-2); color: var(--muted); margin: 1px 3px 1px 0; }
+  .tag.pkg { color: var(--accent); border-color: rgba(163,113,247,.42); }
+  .tag.case { color: var(--info); border-color: rgba(88,166,255,.35); }
+
+  .alert { border-left: 3px solid var(--muted); background: var(--panel); border-radius: 0 8px 8px 0;
+           padding: 12px 15px; margin-bottom: 10px; }
+  .alert.critical { border-left-color: var(--crit); }
+  .alert.warning  { border-left-color: var(--warn); }
+  .alert.info     { border-left-color: var(--info); }
+  .alert h3 { margin: 0 0 5px; font-size: 13.5px; display: flex; align-items: center; gap: 8px; }
+  .alert p { margin: 0 0 5px; color: var(--muted); font-size: 12.8px; }
+  .alert .act { color: var(--text); font-size: 12.5px; }
+
+  .lvl { font-size: 10.5px; text-transform: uppercase; letter-spacing: .7px; padding: 1px 6px;
+         border-radius: 4px; border: 1px solid currentColor; }
+  .lvl.critical { color: var(--crit); } .lvl.warning { color: var(--warn); } .lvl.info { color: var(--info); }
+
+  h2.sec { font-size: 15px; margin: 34px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h2.sec .cnt { color: var(--muted); font-weight: 400; font-size: 12.5px; }
+
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border);
+            color: var(--muted); font-size: 12px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .footer a { color: var(--info); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  .empty { color: var(--muted); font-size: 13px; padding: 18px 0; text-align: center; }
+  code { font-family: var(--mono); background: var(--panel-2); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>MiniVectorDB 提测监控</h1>
+    <span class="sub">OceanBase 2026 大赛 · 赛题一</span>
+    <span class="spacer"></span>
+    <span class="pill live" id="live"><span class="dot"></span><span id="liveText">加载中</span></span>
+    <span class="pill" id="clock">--:--:--</span>
+  </header>
+
+  <div class="bar"><i id="progress" style="width:0%"></i></div>
+
+  <div class="grid" id="summary"></div>
+
+  <h2 class="sec">告警 <span class="cnt" id="alertCount"></span></h2>
+  <div id="alerts"></div>
+
+  <h2 class="sec">题包状态 <span class="cnt" id="pkgMeta"></span></h2>
+  <div class="card" id="package"></div>
+
+  <h2 class="sec">公开用例 <span class="cnt" id="caseMeta"></span></h2>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead><tr><th>用例</th><th>分组</th><th>语句</th><th>检查内容</th><th>状态</th></tr></thead>
+      <tbody id="cases"></tbody>
+    </table>
+  </div>
+
+  <h2 class="sec">上游提交 <span class="cnt" id="commitMeta"></span></h2>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead><tr><th>提交</th><th>时间</th><th>作者</th><th>说明</th><th>标记</th></tr></thead>
+      <tbody id="commits"></tbody>
+    </table>
+  </div>
+
+  <h2 class="sec">提交物 <span class="cnt" id="subMeta"></span></h2>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead><tr><th>文件</th><th>路径</th><th>说明</th><th>状态</th></tr></thead>
+      <tbody id="deliverables"></tbody>
+    </table>
+  </div>
+
+  <h2 class="sec">本地测量</h2>
+  <div class="grid" id="metrics"></div>
+
+  <div class="footer">
+    <span>数据源 <code>data/latest.json</code></span>
+    <span>页面每 60 秒刷新</span>
+    <span id="stamp"></span>
+    <a href="https://github.com/oceanbase/seekdb/tree/2026-competition-round2" target="_blank" rel="noopener">上游分支</a>
+    <a href="https://github.com/yangjingyu722/Myseekdb" target="_blank" rel="noopener">提交仓库</a>
+  </div>
+</div>
+
+<script>
+const REFRESH_MS = 60000;
+let lastPayload = null;
+
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function bytes(n) {
+  if (n == null) return "—";
+  if (n < 1024) return n + " B";
+  if (n < 1048576) return (n / 1024).toFixed(1) + " KiB";
+  return (n / 1048576).toFixed(1) + " MiB";
+}
+function when(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 60) return Math.max(0, Math.floor(diff)) + " 秒前";
+  if (diff < 3600) return Math.floor(diff / 60) + " 分钟前";
+  if (diff < 86400) return Math.floor(diff / 3600) + " 小时前";
+  return d.toISOString().replace("T", " ").slice(0, 16) + " UTC";
+}
+
+function kv(label, value, cls) {
+  return `<div class="kv"><b>${esc(label)}</b><span class="${cls || ""}">${value}</span></div>`;
+}
+function statusChip(text, cls) {
+  return `<span class="pill"><span class="dot" style="background:var(--${cls})"></span>${esc(text)}</span>`;
+}
+
+function render(d) {
+  lastPayload = d;
+
+  const up = d.upstream || {};
+  const sub = d.submission || {};
+  const pkg = up.package || {};
+  const tl = d.timeline || {};
+  const rdy = sub.readiness || {};
+
+  // 时间进度
+  const start = new Date(tl.competition_start || 0).getTime();
+  const end = new Date(tl.competition_end || 0).getTime();
+  if (start && end) {
+    const pct = Math.min(100, Math.max(0, ((Date.now() - start) / (end - start)) * 100));
+    document.getElementById("progress").style.width = pct.toFixed(1) + "%";
+  }
+
+  // 汇总卡片
+  const pkgOk = pkg.present;
+  const casesOk = rdy.public_cases_passed || 0;
+  const casesAll = rdy.public_cases_total || 0;
+  const pushed = sub.pushed;
+  const summary = [
+    ["题包", pkgOk
+      ? `<span class="ok">已发布</span> <span class="muted">${esc(pkg.version || "")}</span>`
+      : `<span class="muted">未发布</span>`,
+      pkgOk ? "ok" : "warn"],
+    ["公开用例", casesAll
+      ? `${casesOk}<span class="muted"> / ${casesAll}</span>`
+      : `<span class="muted">${esc(pkg.case_count || 0)} 个待跑</span>`,
+      casesAll && casesOk === casesAll ? "ok" : "warn"],
+    ["本地用例", `${rdy.local_cases_passed || 0}<span class="muted"> / ${rdy.local_cases_total || 0}</span>`,
+      (rdy.local_cases_passed === rdy.local_cases_total) ? "ok" : "warn"],
+    ["提交物", `<span class="${pushed ? "ok" : "warn"}">${pushed ? "已推送" : "未推送"}</span>`,
+      pushed ? "ok" : "warn"],
+    ["上游 HEAD", `<code>${esc(up.head_short || "")}</code>`,
+      up.head_sha === sub.head_sha ? "muted" : "info"],
+    ["驱动协议", pkg.driver_published
+      ? `<span class="ok">已发布</span>` : `<span class="warn">未公开</span>`,
+      pkg.driver_published ? "ok" : "warn"],
+    ["剩余时间", (() => {
+      if (!end) return "—";
+      const left = end - Date.now();
+      if (left <= 0) return `<span class="crit">已截止</span>`;
+      const days = Math.floor(left / 86400000);
+      const hours = Math.floor((left % 86400000) / 3600000);
+      return days + " 天 " + hours + " 小时";
+    })(), ""],
+    ["每日提测额度", `<span class="muted">${esc(tl.daily_submission_limit || 0)} 次/天</span>`, ""],
+  ];
+  document.getElementById("summary").innerHTML = summary.map(([k, v, c]) =>
+    `<div class="card"><h2>${esc(k)}</h2>${kv("", v, c)}</div>`).join("");
+
+  // 告警
+  const alerts = d.alerts || [];
+  document.getElementById("alertCount").textContent = alerts.length ? alerts.length + " 条" : "";
+  document.getElementById("alerts").innerHTML = alerts.length ? alerts.map(a => `
+    <div class="alert ${esc(a.level)}">
+      <h3><span class="lvl ${esc(a.level)}">${esc(a.level)}</span>${esc(a.title)}</h3>
+      <p>${esc(a.detail)}</p>
+      <p class="act">→ ${esc(a.action)}</p>
+    </div>`).join("") : `<div class="card"><div class="empty">当前没有告警</div></div>`;
+
+  // 题包
+  document.getElementById("pkgMeta").textContent = pkg.version ? "版本 " + pkg.version : "";
+  const pkgRows = [
+    kv("版本", esc(pkg.version || "—")),
+    kv("范围", esc(pkg.scope || "—")),
+    kv("用例数", `${esc(pkg.case_count || 0)} 个，共 ${esc(pkg.total_statements || 0)} 条语句`),
+    kv("断言格式", `<code>${esc(pkg.assertion_format || "—")}</code>`),
+    kv("断言字段", (pkg.assertion_fields || []).map(f => `<span class="tag">${esc(f)}</span>`).join("") || "—"),
+    kv("浮点容差", `<code>${esc(pkg.float_tolerance || "—")}</code>`),
+    kv("驱动是否公开", pkg.driver_published
+      ? `<span class="ok">已发布</span>`
+      : `<span class="warn">未公开</span><span class="muted"> · 封装由配套驱动决定</span>`),
+    kv("说明", `<span class="muted">${esc(pkg.notes || "")}</span>`),
+  ];
+  document.getElementById("package").innerHTML = pkgRows.join("");
+
+  // 用例
+  document.getElementById("caseMeta").textContent = pkg.case_count ? pkg.case_count + " 个" : "";
+  const statusMap = rdy.public_cases_status || {};
+  document.getElementById("cases").innerHTML = (pkg.cases || []).map(c => {
+    const st = statusMap[c.id] || (rdy.public_cases_status === "not-yet-run" ? "not-run" : "");
+    const chip = st === "pass" ? statusChip("通过", "ok")
+      : st === "fail" ? statusChip("失败", "crit")
+      : st === "not-run" ? statusChip("待跑", "warn")
+      : statusChip("未执行", "muted");
+    return `<tr>
+      <td><code>${esc(c.id)}</code></td>
+      <td><span class="tag">${esc(c.group)}</span></td>
+      <td class="mono">${esc(c.statements)}</td>
+      <td class="muted">${(c.checks || []).map(x => `<span class="tag case">${esc(x)}</span>`).join("")}</td>
+      <td>${chip}</td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="5"><div class="empty">题包未发布</div></td></tr>`;
+
+  // 提交历史
+  document.getElementById("commitMeta").textContent = (up.commits || []).length + " 条";
+  document.getElementById("commits").innerHTML = (up.commits || []).map(c => `
+    <tr>
+      <td><code>${esc(c.short)}</code></td>
+      <td class="muted" title="${esc(c.date)}">${esc(when(c.date))}</td>
+      <td class="muted">${esc(c.author)}</td>
+      <td>${esc(c.subject)}</td>
+      <td>${(c.tags || []).map(t => `<span class="tag pkg">${esc(t)}</span>`).join("")}</td>
+    </tr>`).join("");
+
+  // 提交物
+  document.getElementById("subMeta").textContent = sub.head_short ? "HEAD " + sub.head_short : "";
+  const dv = sub.deliverables || {};
+  const dvRows = [
+    ["源码", dv.source, "MiniVectorDB 完整实现"],
+    ["Dockerfile", dv.dockerfile, "多阶段构建，运行阶段只含静态二进制"],
+    ["Agent 材料", dv.conversation, "conversation.json，学习材料"],
+  ];
+  document.getElementById("deliverables").innerHTML = dvRows.map(([name, o, desc]) => {
+    if (!o) return `<tr><td>${esc(name)}</td><td class="muted">—</td><td class="muted">${esc(desc)}</td><td>${statusChip("缺失", "crit")}</td></tr>`;
+    const extra = o.bytes ? bytes(o.bytes) : (o.files ? o.files + " 个文件" : (o.lines ? o.lines + " 行" : ""));
+    const ok = o.valid !== false;
+    return `<tr>
+      <td>${esc(name)}</td>
+      <td><code>${esc(o.path || "")}</code></td>
+      <td class="muted">${esc(desc)}</td>
+      <td>${statusChip(ok ? "就绪" : "不合规", ok ? "ok" : "crit")}
+          <span class="muted mono">${esc(extra)}</span></td>
+    </tr>`;
+  }).join("");
+
+  // 指标
+  const bench = sub.local_benchmark || {};
+  const res = sub.resource_test || {};
+  document.getElementById("metrics").innerHTML = [
+    ["写入 1万行/128维", bench.write_seconds != null ? bench.write_seconds + " s" : "—", ""],
+    ["TopK 1000 次", bench.query_seconds != null ? bench.query_seconds + " s" : "—", "ok"],
+    ["查询吞吐", bench.query_per_second != null ? bench.query_per_second + " q/s" : "—", ""],
+    ["资源测试数据量", res.data_bytes ? bytes(res.data_bytes) : "—", ""],
+    ["重启恢复", res.restart_seconds != null ? res.restart_seconds + " s" : "—", "ok"],
+    ["超内存数据查询", res.query_seconds != null ? res.query_seconds + " s" : "—", "ok"],
+  ].map(([k, v, c]) => `<div class="card"><h2>${esc(k)}</h2>${kv("", v, c)}</div>`).join("");
+
+  document.getElementById("stamp").textContent = "数据生成于 " + when(d.generated_at);
+  document.getElementById("liveText").textContent = "实时 · " + when(d.generated_at);
+}
+
+async function load() {
+  try {
+    const res = await fetch("data/latest.json?t=" + Date.now(), { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    render(await res.json());
+  } catch (e) {
+    document.getElementById("liveText").textContent = "离线";
+    document.querySelector("#live .dot").style.background = "var(--crit)";
+    console.error(e);
+  }
+}
+
+function tick() {
+  const d = new Date();
+  document.getElementById("clock").textContent = d.toTimeString().slice(0, 8);
+}
+setInterval(tick, 1000);
+tick();
+load();
+setInterval(load, REFRESH_MS);
+</script>
+</body>
+</html>
