@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-09T08:20:00Z",
-  "generator": "manual baseline",
+  "generated_at": "2026-11-09T09:48:59Z",
+  "generator": "scripts/refresh.py",
   "upstream": {
     "repo": "oceanbase/seekdb",
     "branch": "2026-competition-round2",
@@ -15,8 +15,10 @@
         "date": "2026-11-09T07:00:49Z",
         "author": "wangzelin.wzl",
         "subject": "upload some cases",
-        "files_changed": 12,
-        "tags": ["task-package", "public-cases"]
+        "files_changed": 0,
+        "tags": [
+          "task-package"
+        ]
       },
       {
         "sha": "c842a368c3394748d0499386c18f6b465242e141",
@@ -24,8 +26,119 @@
         "date": "2026-11-04T09:25:38Z",
         "author": "wangzelin.wzl",
         "subject": "2026 competition one more round",
-        "files_changed": 9148,
-        "tags": ["skeleton"]
+        "files_changed": 0,
+        "tags": []
+      },
+      {
+        "sha": "5bce9e06d1281347ad61344e4b01fab9158c58a2",
+        "short": "5bce9e06d",
+        "date": "2026-10-26T03:06:59Z",
+        "author": "wangzelin.wzl",
+        "subject": "upload 2026-competition testcases",
+        "files_changed": 0,
+        "tags": [
+          "new",
+          "task-package"
+        ]
+      },
+      {
+        "sha": "76f871eb5a84b664d487b03b3412ce50194135b5",
+        "short": "76f871eb5",
+        "date": "2026-10-14T08:36:31Z",
+        "author": "LIN",
+        "subject": "fix(build): use lld when building jemalloc on Linux (#1496)",
+        "files_changed": 0,
+        "tags": [
+          "new"
+        ]
+      },
+      {
+        "sha": "2377ef773b7c83aa4f63383bf2d9998683ba51f0",
+        "short": "2377ef773",
+        "date": "2026-10-14T08:33:20Z",
+        "author": "cms-cms",
+        "subject": "fix(vector): accept partial IVF centroid caches (#1467)",
+        "files_changed": 0,
+        "tags": [
+          "new"
+        ]
+      },
+      {
+        "sha": "47fa38c788516f1ebf3c42cc3e1cfbd9f6bdcc8f",
+        "short": "47fa38c78",
+        "date": "2026-10-14T07:33:04Z",
+        "author": "Whalen",
+        "subject": "fix(vector): preserve query-local bitmaps for older read views (#1443)",
+        "files_changed": 0,
+        "tags": [
+          "new"
+        ]
+      },
+      {
+        "sha": "62a7c761384d72fcd77493bf1c95ba8137e5f9b8",
+        "short": "62a7c7613",
+        "date": "2026-10-14T06:19:17Z",
+        "author": "wangyunlai-seekdb",
+        "subject": "fix(storage): stop retrying empty major-freeze records (#1498)",
+        "files_changed": 0,
+        "tags": [
+          "new"
+        ]
+      },
+      {
+        "sha": "f8db032ef36fdc570cd17c7e0ac7d3d296a5d507",
+        "short": "f8db032ef",
+        "date": "2026-10-13T10:06:29Z",
+        "author": "wangyunlai",
+        "subject": "test(charset): cover unicode_ci session and DDL integration (#1493)",
+        "files_changed": 0,
+        "tags": [
+          "new"
+        ]
+      },
+      {
+        "sha": "6757d0aec3a996f4f52650b358228d9618f0acc3",
+        "short": "6757d0aec",
+        "date": "2026-10-13T07:28:51Z",
+        "author": "footka",
+        "subject": "feat(storage): replace SQLite with Rust local transactional KV (#1486)",
+        "files_changed": 0,
+        "tags": [
+          "new"
+        ]
+      },
+      {
+        "sha": "82e032c19561fc480ed6ac2236d6d8cd533852f2",
+        "short": "82e032c19",
+        "date": "2026-10-13T06:01:52Z",
+        "author": "LIN",
+        "subject": "fix(telemetry): remove creation time from UUID generation (#1487)",
+        "files_changed": 0,
+        "tags": [
+          "new"
+        ]
+      },
+      {
+        "sha": "a36940ac534088522ccb0cf1e165328ea192343e",
+        "short": "a36940ac5",
+        "date": "2026-10-12T12:11:35Z",
+        "author": "wangyunlai-seekdb",
+        "subject": "SEEK-501: restore utf8mb4_unicode_ci collation support (#1349)",
+        "files_changed": 0,
+        "tags": [
+          "new"
+        ]
+      },
+      {
+        "sha": "208c157423d39326826be1a8d4e5ade2a4ee8ae3",
+        "short": "208c15742",
+        "date": "2026-10-12T11:38:11Z",
+        "author": "cms-cms",
+        "subject": "fix(ddl): allow dropping readable indexes (#1482)",
+        "files_changed": 0,
+        "tags": [
+          "new"
+        ]
       }
     ],
     "package": {
@@ -35,14 +148,44 @@
       "case_count": 5,
       "total_statements": 32,
       "cases": [
-        {"id": "sql_crud", "group": "sql", "statements": 9, "checks": ["ddl", "multi-row insert", "select *", "update by condition", "delete by condition", "no-match update/delete"]},
-        {"id": "sql_comparisons", "group": "sql", "statements": 7, "checks": ["numeric comparison", "string comparison", "AND"]},
-        {"id": "sql_ordering", "group": "sql", "statements": 7, "checks": ["asc/desc", "tie by primary key", "LIMIT 0", "LIMIT over count", "unordered result"]},
-        {"id": "sql_empty", "group": "sql", "statements": 4, "checks": ["empty table scan", "empty result set", "delete on empty table"]},
-        {"id": "vector_euclidean", "group": "vector", "statements": 5, "checks": ["2-dim vector", "vector update", "L2_DISTANCE", "distance ordering", "filtered vector query"]}
+        {
+          "id": "sql_crud",
+          "group": "sql",
+          "statements": 9,
+          "checks": []
+        },
+        {
+          "id": "sql_comparisons",
+          "group": "sql",
+          "statements": 7,
+          "checks": []
+        },
+        {
+          "id": "sql_ordering",
+          "group": "sql",
+          "statements": 7,
+          "checks": []
+        },
+        {
+          "id": "sql_empty",
+          "group": "sql",
+          "statements": 4,
+          "checks": []
+        },
+        {
+          "id": "vector_euclidean",
+          "group": "vector",
+          "statements": 5,
+          "checks": []
+        }
       ],
       "assertion_format": "json-array",
-      "assertion_fields": ["affected_rows", "columns", "rows", "unordered"],
+      "assertion_fields": [
+        "affected_rows",
+        "columns",
+        "rows",
+        "unordered"
+      ],
       "float_tolerance": "abs=1e-5, rel=1e-5",
       "driver_published": false,
       "notes": "The public package defines the SQL inputs and the result semantics. The process communication wrapper is defined by the accompanying test driver, which is not part of the public package."
@@ -51,19 +194,33 @@
   "submission": {
     "repo": "yangjingyu722/Myseekdb",
     "branch": "2026-competition-round2",
-    "head_sha": "9f60529f4366383489f11b03e8740bdbd5e0cf32",
-    "head_short": "9f60529f4",
+    "head_sha": "",
+    "head_short": "",
     "pushed": false,
     "pushed_at": null,
     "deliverables": {
-      "source": {"present": true, "path": "minivectordb/", "files": 47},
-      "dockerfile": {"present": true, "path": "Dockerfile", "lines": 44},
-      "conversation": {"present": true, "path": "agent/conversation.json", "bytes": 42837, "limit_bytes": 131072, "valid": true}
+      "source": {
+        "present": false,
+        "path": "minivectordb/",
+        "files": 0
+      },
+      "dockerfile": {
+        "present": false,
+        "path": "Dockerfile",
+        "lines": 0
+      },
+      "conversation": {
+        "present": false,
+        "path": "agent/conversation.json",
+        "bytes": 0,
+        "limit_bytes": 131072,
+        "valid": false
+      }
     },
     "readiness": {
-      "local_cases_total": 9,
-      "local_cases_passed": 9,
-      "public_cases_total": 5,
+      "local_cases_total": 0,
+      "local_cases_passed": 0,
+      "public_cases_total": 0,
       "public_cases_passed": 0,
       "public_cases_status": "not-yet-run",
       "docker_image_built": false
@@ -97,21 +254,21 @@
   "alerts": [
     {
       "level": "critical",
-      "title": "Public cases have not been executed yet",
-      "detail": "The task package a3dba559c changed the assertion format to structured JSON. The local runner still speaks the earlier text protocol, so the five public cases have not been validated against the delivered package.",
-      "action": "Align the protocol layer with the delivered package and run the public cases before any submission."
+      "title": "The public cases have not been executed against the delivered package",
+      "detail": "The task package a3dba559c changed the assertion format to structured JSON with affected_rows, columns, rows and unordered. The local runner still speaks the earlier text protocol.",
+      "action": "Align the protocol layer with the delivered package and run the five public cases before any submission."
     },
     {
       "level": "warning",
-      "title": "Evaluation driver is not published",
+      "title": "The evaluation driver is not published",
       "detail": "The public package states that the process communication wrapper is defined by the accompanying test driver, which is not included. The wire format is still an inference.",
       "action": "Keep the protocol layer switchable and confirm the format before submitting."
     },
     {
       "level": "info",
-      "title": "Task package updated",
-      "detail": "Commit a3dba559c added mysqltest/ with five public cases and manifest version minivectordb-public-basic-v1.",
-      "action": "Diff the new cases against the local suite and cover the new semantics."
+      "title": "The submission branch is not pushed",
+      "detail": "The platform reads the branch from the remote repository, a local commit is not visible to the evaluation.",
+      "action": "Push the branch with the source, the Dockerfile and the conversation.json in one commit."
     }
   ]
 }
