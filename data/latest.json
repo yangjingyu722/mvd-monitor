@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T09:54:56Z",
+  "generated_at": "2026-11-09T09:48:59Z",
   "generator": "scripts/refresh.py",
   "upstream": {
     "repo": "oceanbase/seekdb",
@@ -200,27 +200,27 @@
     "pushed_at": null,
     "deliverables": {
       "source": {
-        "present": true,
+        "present": false,
         "path": "minivectordb/",
-        "files": 47
+        "files": 0
       },
       "dockerfile": {
-        "present": true,
+        "present": false,
         "path": "Dockerfile",
-        "lines": 44
+        "lines": 0
       },
       "conversation": {
-        "present": true,
+        "present": false,
         "path": "agent/conversation.json",
-        "bytes": 42837,
+        "bytes": 0,
         "limit_bytes": 131072,
-        "valid": true
+        "valid": false
       }
     },
     "readiness": {
-      "local_cases_total": 9,
-      "local_cases_passed": 9,
-      "public_cases_total": 5,
+      "local_cases_total": 0,
+      "local_cases_passed": 0,
+      "public_cases_total": 0,
       "public_cases_passed": 0,
       "public_cases_status": "not-yet-run",
       "docker_image_built": false
