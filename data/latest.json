@@ -1,14 +1,26 @@
 {
-  "generated_at": "2026-11-09T09:59:16Z",
+  "generated_at": "2026-11-09T20:10:39Z",
   "generator": "scripts/refresh.py",
   "upstream": {
     "repo": "oceanbase/seekdb",
     "branch": "2026-competition-round2",
-    "head_sha": "a3dba559c1e7ebdc48bc990ffb1a4c75d1c1075c",
-    "head_short": "a3dba559c",
-    "head_date": "2026-11-09T07:00:49Z",
-    "head_subject": "upload some cases",
+    "head_sha": "9f6df2ba5acf871376e22b64a3d0724e4b575044",
+    "head_short": "9f6df2ba5",
+    "head_date": "2026-11-09T10:40:21Z",
+    "head_subject": "upload more cases",
     "commits": [
+      {
+        "sha": "9f6df2ba5acf871376e22b64a3d0724e4b575044",
+        "short": "9f6df2ba5",
+        "date": "2026-11-09T10:40:21Z",
+        "author": "wangzelin.wzl",
+        "subject": "upload more cases",
+        "files_changed": 0,
+        "tags": [
+          "new",
+          "task-package"
+        ]
+      },
       {
         "sha": "a3dba559c1e7ebdc48bc990ffb1a4c75d1c1075c",
         "short": "a3dba559c",
@@ -111,51 +123,132 @@
         "subject": "SEEK-501: restore utf8mb4_unicode_ci collation support (#1349)",
         "files_changed": 0,
         "tags": []
-      },
-      {
-        "sha": "208c157423d39326826be1a8d4e5ade2a4ee8ae3",
-        "short": "208c15742",
-        "date": "2026-10-12T11:38:11Z",
-        "author": "cms-cms",
-        "subject": "fix(ddl): allow dropping readable indexes (#1482)",
-        "files_changed": 0,
-        "tags": []
       }
     ],
     "package": {
       "present": true,
-      "version": "minivectordb-public-basic-v1",
+      "version": "minivectordb-public-v4",
       "scope": "public-samples",
-      "case_count": 5,
-      "total_statements": 32,
+      "case_count": 20,
+      "total_statements": 95,
       "cases": [
         {
           "id": "sql_crud",
           "group": "sql",
-          "statements": 9,
+          "statements": 7,
           "checks": []
         },
         {
           "id": "sql_comparisons",
           "group": "sql",
-          "statements": 7,
+          "statements": 4,
           "checks": []
         },
         {
           "id": "sql_ordering",
           "group": "sql",
-          "statements": 7,
+          "statements": 4,
           "checks": []
         },
         {
           "id": "sql_empty",
           "group": "sql",
+          "statements": 3,
+          "checks": []
+        },
+        {
+          "id": "sql_primary_key",
+          "group": "sql",
           "statements": 4,
+          "checks": []
+        },
+        {
+          "id": "sql_unicode",
+          "group": "sql",
+          "statements": 3,
+          "checks": []
+        },
+        {
+          "id": "sql_bigint",
+          "group": "sql",
+          "statements": 3,
+          "checks": []
+        },
+        {
+          "id": "sql_unsupported",
+          "group": "sql",
+          "statements": 3,
+          "checks": []
+        },
+        {
+          "id": "storage_restart",
+          "group": "storage",
+          "statements": 3,
           "checks": []
         },
         {
           "id": "vector_euclidean",
           "group": "vector",
+          "statements": 3,
+          "checks": []
+        },
+        {
+          "id": "transaction_commit",
+          "group": "transaction",
+          "statements": 6,
+          "checks": []
+        },
+        {
+          "id": "transaction_rollback",
+          "group": "transaction",
+          "statements": 6,
+          "checks": []
+        },
+        {
+          "id": "storage_mutations",
+          "group": "storage",
+          "statements": 6,
+          "checks": []
+        },
+        {
+          "id": "storage_multiple_tables",
+          "group": "storage",
+          "statements": 6,
+          "checks": []
+        },
+        {
+          "id": "vector_ties_and_filter",
+          "group": "vector",
+          "statements": 5,
+          "checks": []
+        },
+        {
+          "id": "vector_float32",
+          "group": "vector",
+          "statements": 3,
+          "checks": []
+        },
+        {
+          "id": "vector_index_maintenance",
+          "group": "vector",
+          "statements": 9,
+          "checks": []
+        },
+        {
+          "id": "transaction_failed_insert",
+          "group": "transaction",
+          "statements": 8,
+          "checks": []
+        },
+        {
+          "id": "transaction_autocommit_atomic",
+          "group": "transaction",
+          "statements": 4,
+          "checks": []
+        },
+        {
+          "id": "transaction_shutdown_rollback",
+          "group": "transaction",
           "statements": 5,
           "checks": []
         }
@@ -236,7 +329,7 @@
     {
       "level": "critical",
       "title": "The public cases have not been executed against the delivered package",
-      "detail": "The task package a3dba559c changed the assertion format to structured JSON with affected_rows, columns, rows and unordered. The local runner still speaks the earlier text protocol.",
+      "detail": "The task package 9f6df2ba5 changed the assertion format to structured JSON with affected_rows, columns, rows and unordered. The local runner still speaks the earlier text protocol.",
       "action": "Align the protocol layer with the delivered package and run the five public cases before any submission."
     },
     {
