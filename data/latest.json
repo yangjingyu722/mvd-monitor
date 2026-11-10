@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T20:10:39Z",
+  "generated_at": "2026-11-10T02:45:46Z",
   "generator": "scripts/refresh.py",
   "upstream": {
     "repo": "oceanbase/seekdb",
@@ -17,7 +17,6 @@
         "subject": "upload more cases",
         "files_changed": 0,
         "tags": [
-          "new",
           "task-package"
         ]
       },
