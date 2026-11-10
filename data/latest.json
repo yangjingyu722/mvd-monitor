@@ -1,14 +1,26 @@
 {
-  "generated_at": "2026-11-10T02:45:46Z",
+  "generated_at": "2026-11-10T10:28:58Z",
   "generator": "scripts/refresh.py",
   "upstream": {
     "repo": "oceanbase/seekdb",
     "branch": "2026-competition-round2",
-    "head_sha": "9f6df2ba5acf871376e22b64a3d0724e4b575044",
-    "head_short": "9f6df2ba5",
-    "head_date": "2026-11-09T10:40:21Z",
-    "head_subject": "upload more cases",
+    "head_sha": "f4d4e26653af823a7601668802f80e374ad6643c",
+    "head_short": "f4d4e2665",
+    "head_date": "2026-11-10T03:30:03Z",
+    "head_subject": "upload stdin/stdout protocol and one demo py to double check",
     "commits": [
+      {
+        "sha": "f4d4e26653af823a7601668802f80e374ad6643c",
+        "short": "f4d4e2665",
+        "date": "2026-11-10T03:30:03Z",
+        "author": "LIN",
+        "subject": "upload stdin/stdout protocol and one demo py to double check",
+        "files_changed": 0,
+        "tags": [
+          "new",
+          "task-package"
+        ]
+      },
       {
         "sha": "9f6df2ba5acf871376e22b64a3d0724e4b575044",
         "short": "9f6df2ba5",
@@ -111,15 +123,6 @@
         "date": "2026-10-13T06:01:52Z",
         "author": "LIN",
         "subject": "fix(telemetry): remove creation time from UUID generation (#1487)",
-        "files_changed": 0,
-        "tags": []
-      },
-      {
-        "sha": "a36940ac534088522ccb0cf1e165328ea192343e",
-        "short": "a36940ac5",
-        "date": "2026-10-12T12:11:35Z",
-        "author": "wangyunlai-seekdb",
-        "subject": "SEEK-501: restore utf8mb4_unicode_ci collation support (#1349)",
         "files_changed": 0,
         "tags": []
       }
@@ -328,7 +331,7 @@
     {
       "level": "critical",
       "title": "The public cases have not been executed against the delivered package",
-      "detail": "The task package 9f6df2ba5 changed the assertion format to structured JSON with affected_rows, columns, rows and unordered. The local runner still speaks the earlier text protocol.",
+      "detail": "The task package f4d4e2665 changed the assertion format to structured JSON with affected_rows, columns, rows and unordered. The local runner still speaks the earlier text protocol.",
       "action": "Align the protocol layer with the delivered package and run the five public cases before any submission."
     },
     {
